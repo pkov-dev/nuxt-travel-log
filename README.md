@@ -1,3 +1,7 @@
+## DEMO
+
+https://nuxt-travel-log-fawn.vercel.app/
+
 # Travel log
 
 A full stack application built with Nuxt that allows users to keep track of all the places they've been.

@@ -1,2 +1,14 @@
+minimumReleaseAgeExclude:
+  - "@typescript-eslint/tsconfig-utils@8.66.0"
+  - "@typescript-eslint/types@8.66.0"
+  - "@typescript-eslint/utils@8.66.0"
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
+trustPolicyExclude:
+  - semver@6.3.1
+
 allowBuilds:
   esbuild: true
+  unrs-resolver: true
