@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   label: string;
   icon: string;
   href: string;
@@ -11,21 +11,21 @@ const route = useRoute();
 
 <template>
   <div
-    :data-tip="showLabel ? undefined : props.label"
+    :data-tip="showLabel ? undefined : label"
     class="tooltip-right"
     :class="{
       tooltip: !showLabel,
     }"
   >
     <NuxtLink
-      :to="props.href"
+      :to="href"
       :class="{
-        'bg-base-200': route.path === props.href,
+        'bg-base-200': route.path === href,
       }"
       class="relative flex flex-nowrap items-center gap-2 p-2 hover:cursor-pointer hover:bg-base-300"
     >
       <span class=" flex items-center justify-center">
-        <Icon :name="props.icon" size="24" />
+        <Icon :name="icon" size="24" />
       </span>
 
       <Transition name="label">
@@ -33,7 +33,7 @@ const route = useRoute();
           v-if="showLabel"
           class="whitespace-nowrap"
         >
-          {{ props.label }}
+          {{ label }}
         </span>
       </Transition>
     </NuxtLink>
