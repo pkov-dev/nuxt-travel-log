@@ -24,7 +24,7 @@ export const auth = betterAuth({
   }),
   advanced: {
     database: {
-      generateId: false, // "serial" for auto-incrementing numeric IDs
+      generateId: "serial", // "serial" for auto-incrementing numeric IDs
     },
   },
   socialProviders: {
@@ -34,3 +34,6 @@ export const auth = betterAuth({
     },
   },
 });
+
+export type Session = typeof auth.$Infer.Session;
+export type User = Session["user"];
