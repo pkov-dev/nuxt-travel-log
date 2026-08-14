@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { FetchError } from "ofetch";
 
+import { InsertLocation } from "~~/lib/db/schema";
+
 const { $csrfFetch } = useNuxtApp();
 const router = useRouter();
 const loading = ref(false);
@@ -8,7 +10,7 @@ const submitted = ref(false);
 const submitError = ref("");
 
 const { errors, handleSubmit, meta, setErrors } = useForm({
-//   validationSchema: toTypedSchema(InsertLocation),
+  validationSchema: toTypedSchema(InsertLocation),
 });
 
 const onSubmit = handleSubmit(async (values) => {
