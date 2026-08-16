@@ -1,9 +1,15 @@
+import type { User } from "better-auth";
+
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware } from "better-auth/api";
 
 import db from "./db/index.ts";
 import env from "./env.ts";
+
+export type UserWithId = Omit<User, "id"> & {
+  id: number;
+};
 
 export const auth = betterAuth({
   hooks: {
@@ -34,6 +40,3 @@ export const auth = betterAuth({
     },
   },
 });
-
-export type Session = typeof auth.$Infer.Session;
-export type User = Session["user"];
