@@ -28,4 +28,7 @@ export default defineNuxtConfig({
   colorMode: {
     dataValue: "theme",
   },
+  experimental: {
+    typedPages: true,
+  },
 });
