@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const isSidebarOpen = ref(true);
 const route = useRoute();
-const sidebarStore = useSidebarStore();
 const locationsStore = useLocationsStore();
 
 function toggleSidebar() {
@@ -50,13 +49,14 @@ onMounted(() => {
           icon="tabler:circle-plus-filled"
           href="/dashboard/add"
         />
-        <div v-if="sidebarStore.loading || sidebarStore.sidebarItems.length" class="divider" />
-        <div v-if="sidebarStore.loading" class="px-4">
+        <div v-if="locationsStore.status === 'pending'" class="divider" />
+
+        <div v-if="locationsStore.status === 'pending'" class="px-4">
           <div class="skeleton h-4 w-full" />
         </div>
-        <template v-if="!sidebarStore.loading && sidebarStore.sidebarItems.length">
+        <template v-else-if="locationsStore.sidebarItems.length">
           <SidebarButton
-            v-for="item in sidebarStore.sidebarItems"
+            v-for="item in locationsStore.sidebarItems"
             :key="item.id"
             :show-label="isSidebarOpen"
             :label="item.label"
@@ -73,9 +73,9 @@ onMounted(() => {
         />
       </div>
     </div>
-    <div class="flex-1">
-      <NuxtPage class=" h-1/2" />
-      <AppMap class=" h-1/2" />
+    <div class="flex-1 flex flex-col">
+      <NuxtPage />
+      <AppMap class="flex-1" />
     </div>
   </div>
 </template>

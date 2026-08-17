@@ -1,17 +1,22 @@
-<script setup>
-const style = "https://demotiles.maplibre.org/style.json";
-const center = [-1.559482, 47.21322];
-const zoom = 8;
+<script setup lang="ts">
+import { CENTER_UK } from "~~/lib/constants";
+
+const colorMode = useColorMode();
+const style = computed(() => colorMode.value === "dark" ? "/styles/dark.json" : "https://tiles.openfreemap.org/styles/liberty");
+
+const zoom = 4;
 </script>
 
 <template>
-  <MglMap
-    :map-style="style"
-    :center="center"
-    :zoom="zoom"
-    height="400"
-    width="400"
-  >
-    <MglNavigationControl />
-  </MglMap>
+  <div class="h-full min-h-80 w-full">
+    <MglMap
+      :map-style="style"
+      :center="CENTER_UK"
+      :zoom="zoom"
+      height="100%"
+      width="100%"
+    >
+      <MglNavigationControl />
+    </MglMap>
+  </div>
 </template>
