@@ -1,23 +1,22 @@
 export const useLocationsStore = defineStore("locations", () => {
-  const { data, status, refresh } = useLazyFetch("/api/locations");
+  const { data: locations, status, refresh } = useLazyFetch("/api/locations");
 
-  const sidebarStore = useSidebarStore();
-
-  watchEffect(() => {
-    if (data.value) {
-      sidebarStore.loading = false;
-      sidebarStore.sidebarItems = data.value.map(location => ({
-        id: `location-${location.id}`,
-        label: location.name,
-        icon: "tabler:map-pin-filled",
-        href: "#",
-      }));
+  const sidebarItems = computed(() => {
+    if (!locations.value) {
+      return [];
     }
-    sidebarStore.loading = status.value === "pending";
+
+    return locations.value.map(location => ({
+      id: `location-${location.id}`,
+      label: location.name,
+      icon: "tabler:map-pin-filled",
+      href: "#",
+    }));
   });
 
   return {
-    locations: data,
+    locations,
+    sidebarItems,
     status,
     refresh,
   };
