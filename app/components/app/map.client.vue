@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { CENTER_UK } from "~~/lib/constants";
 
+const mapStore = useMapStore();
+
 const colorMode = useColorMode();
 const style = computed(() => colorMode.value === "dark" ? "/styles/dark.json" : "https://tiles.openfreemap.org/styles/liberty");
 
@@ -17,6 +19,7 @@ const zoom = 4;
       width="100%"
     >
       <MglNavigationControl />
+      <MglMarker v-for="point in mapStore.mapPoints" :key="point.id" :coordinates="[point.long, point.lat]" />
     </MglMap>
   </div>
 </template>
