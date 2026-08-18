@@ -34,8 +34,16 @@ onMounted(() => {
         }"
         @click="toggleSidebar"
       >
-        <Icon v-if="isSidebarOpen" name="tabler:chevron-left" size="32" />
-        <Icon v-else name="tabler:chevron-right" size="32" />
+        <Icon
+          v-if="isSidebarOpen"
+          name="tabler:chevron-left"
+          size="32"
+        />
+        <Icon
+          v-else
+          name="tabler:chevron-right"
+          size="32"
+        />
       </div>
       <div class="flex flex-col">
         <SidebarButton
