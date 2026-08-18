@@ -2,6 +2,7 @@
 const isSidebarOpen = ref(true);
 const route = useRoute();
 const locationsStore = useLocationsStore();
+const sidebarStore = useSidebarStore();
 
 function toggleSidebar() {
   isSidebarOpen.value = !isSidebarOpen.value;
@@ -19,7 +20,7 @@ onMounted(() => {
 <template>
   <div class="flex-1 flex">
     <div
-      class="bg-base-100 transition-all duration-300"
+      class="bg-base-100 transition-all duration-300 shrink-0"
       :class="{
         'w-64': isSidebarOpen,
         'w-16': !isSidebarOpen,
@@ -33,8 +34,16 @@ onMounted(() => {
         }"
         @click="toggleSidebar"
       >
-        <Icon v-if="isSidebarOpen" name="tabler:chevron-left" size="32" />
-        <Icon v-else name="tabler:chevron-right" size="32" />
+        <Icon
+          v-if="isSidebarOpen"
+          name="tabler:chevron-left"
+          size="32"
+        />
+        <Icon
+          v-else
+          name="tabler:chevron-right"
+          size="32"
+        />
       </div>
       <div class="flex flex-col">
         <SidebarButton
@@ -49,14 +58,14 @@ onMounted(() => {
           icon="tabler:circle-plus-filled"
           href="/dashboard/add"
         />
-        <div v-if="locationsStore.status === 'pending'" class="divider" />
+        <div v-if="sidebarStore.loading || sidebarStore.sidebarItems.length" class="divider" />
 
-        <div v-if="locationsStore.status === 'pending'" class="px-4">
+        <div v-if="sidebarStore.loading" class="px-4">
           <div class="skeleton h-4 w-full" />
         </div>
-        <template v-else-if="locationsStore.sidebarItems.length">
+        <template v-if="!sidebarStore.loading && sidebarStore.sidebarItems.length">
           <SidebarButton
-            v-for="item in locationsStore.sidebarItems"
+            v-for="item in sidebarStore.sidebarItems"
             :key="item.id"
             :show-label="isSidebarOpen"
             :label="item.label"
@@ -73,9 +82,11 @@ onMounted(() => {
         />
       </div>
     </div>
-    <div class="flex-1 flex flex-col">
-      <NuxtPage />
-      <AppMap class="flex-1" />
+    <div class="flex-1 overflow-auto bg-base-200">
+      <div class="flex flex-col size-full">
+        <NuxtPage />
+        <AppMap class="flex-1" />
+      </div>
     </div>
   </div>
 </template>

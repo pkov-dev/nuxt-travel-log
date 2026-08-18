@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@indoorequal/vue-maplibre-gl':
+        specifier: ^9.0.1
+        version: 9.0.1(maplibre-gl@5.24.0)(vue@3.5.40(typescript@6.0.3))
       '@libsql/client':
         specifier: ^0.17.4
         version: 0.17.4
@@ -1048,6 +1051,13 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       maplibre-gl: ^5.0.0
+      vue: ^3.4.18
+
+  '@indoorequal/vue-maplibre-gl@9.0.1':
+    resolution: {integrity: sha512-9jPSJMej0tYANYDTmkobysTOGS7FyZk48bo3g3YB3wE/CQ3fq0hy1cY6emVA8RwYOh6UDAa4PT4efC7ZWGU+Mg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      maplibre-gl: ^6.0.0
       vue: ^3.4.18
 
   '@ioredis/commands@1.10.0':
@@ -6536,6 +6546,11 @@ snapshots:
       vue: 3.5.40(typescript@6.0.3)
 
   '@indoorequal/vue-maplibre-gl@8.4.2(maplibre-gl@5.24.0)(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      maplibre-gl: 5.24.0
+      vue: 3.5.40(typescript@6.0.3)
+
+  '@indoorequal/vue-maplibre-gl@9.0.1(maplibre-gl@5.24.0)(vue@3.5.40(typescript@6.0.3))':
     dependencies:
       maplibre-gl: 5.24.0
       vue: 3.5.40(typescript@6.0.3)
