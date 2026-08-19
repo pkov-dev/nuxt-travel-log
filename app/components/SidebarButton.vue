@@ -4,6 +4,7 @@ defineProps<{
   icon: string;
   href: string;
   showLabel: boolean;
+  iconColor?: "text-accent" | "text-primary" | "text-secondary";
 }>();
 
 const route = useRoute();
@@ -25,7 +26,11 @@ const route = useRoute();
       class="relative flex flex-nowrap items-center gap-2 p-2 hover:cursor-pointer hover:bg-base-300"
     >
       <span class=" flex items-center justify-center">
-        <Icon :name="icon" size="24" />
+        <Icon
+          :name="icon"
+          size="24"
+          :class="iconColor"
+        />
       </span>
 
       <Transition name="label">
