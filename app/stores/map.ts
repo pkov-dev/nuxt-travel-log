@@ -1,5 +1,6 @@
 export const useMapStore = defineStore("map", () => {
   const selectedPoint = ref<MapPoint | null>(null);
+  const addedPoint = ref<MapPoint | null>(null);
   const locationsStore = useLocationsStore();
 
   const mapPoints = computed(() => {
@@ -20,5 +21,6 @@ export const useMapStore = defineStore("map", () => {
   return {
     mapPoints,
     selectedPoint,
+    addedPoint,
   };
 });
