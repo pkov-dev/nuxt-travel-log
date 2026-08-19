@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { MglEvent } from "@indoorequal/vue-maplibre-gl";
+import type { LngLat } from "maplibre-gl";
+
 import { CENTER_UK } from "~~/lib/constants";
 import { LngLatBounds } from "maplibre-gl";
 
@@ -9,7 +12,6 @@ const colorMode = useColorMode();
 const style = computed(() => colorMode.value === "dark" ? "/styles/dark.json" : "https://tiles.openfreemap.org/styles/liberty");
 
 const zoom = 4;
-const shouldFlyTo = ref(true);
 
 function fitMapToPoints(points: MapPoint[]) {
   const map = mapRef.map;
@@ -30,9 +32,18 @@ function fitMapToPoints(points: MapPoint[]) {
   });
 }
 
-function selectPointWithoutFlyTo(point: MapPoint) {
-  shouldFlyTo.value = false;
-  mapStore.selectedPoint = point;
+function updateAddedPoint(location: LngLat) {
+  if (mapStore.addedPoint) {
+    mapStore.addedPoint.lat = location.lat;
+    mapStore.addedPoint.long = location.lng;
+  }
+}
+
+function onDoubleClick(mglEvent: MglEvent<"dblclick">) {
+  if (mapStore.addedPoint) {
+    mapStore.addedPoint.lat = mglEvent.event.lngLat.lat;
+    mapStore.addedPoint.long = mglEvent.event.lngLat.lng;
+  }
 }
 
 watch(
@@ -53,21 +64,17 @@ watch(
     }
   },
 );
-watch(() => mapStore.selectedPoint, (selectedPoint) => {
-  if (!shouldFlyTo.value) {
-    shouldFlyTo.value = true;
-    return;
-  }
 
-  if (!selectedPoint) {
-    fitMapToPoints(mapStore.mapPoints);
-    return;
+watch(() => mapStore.addedPoint, (newValue, oldValue) => {
+  if (newValue && !oldValue) {
+    mapRef.map?.flyTo({
+      center: [newValue.long, newValue.lat],
+      speed: 0.8,
+      zoom: 6,
+    });
   }
-
-  mapRef.map?.flyTo({
-    center: [selectedPoint.long, selectedPoint.lat],
-    speed: 0.8,
-  });
+}, {
+  immediate: true,
 });
 </script>
 
@@ -77,10 +84,29 @@ watch(() => mapStore.selectedPoint, (selectedPoint) => {
       :map-style="style"
       :center="CENTER_UK"
       :zoom="zoom"
-      height="100%"
-      width="100%"
+      @map:dblclick="onDoubleClick"
     >
       <MglNavigationControl />
+      <MglMarker
+        v-if="mapStore.addedPoint"
+        draggable
+        class-name="z-50"
+        :coordinates="[mapStore.addedPoint.long, mapStore.addedPoint.lat]"
+        @update:coordinates="updateAddedPoint"
+      >
+        <template #marker>
+          <div
+            class="tooltip tooltip-top tooltip-open hover:cursor-pointer"
+            data-tip="Drag to your desired location"
+          >
+            <Icon
+              name="tabler:map-pin-filled"
+              size="35"
+              class="text-warning"
+            />
+          </div>
+        </template>
+      </MglMarker>
       <MglMarker
         v-for="point in mapStore.mapPoints"
         :key="point.id"
@@ -93,7 +119,7 @@ watch(() => mapStore.selectedPoint, (selectedPoint) => {
               'tooltip-open': mapStore.selectedPoint?.id === point.id,
             }"
             :data-tip="point.name"
-            @mouseenter="selectPointWithoutFlyTo(point)"
+            @mouseenter="mapStore.selectedPoint = point"
             @mouseleave="mapStore.selectedPoint = null"
           >
             <Icon

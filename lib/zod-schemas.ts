@@ -17,8 +17,7 @@ export const DateSchema = z.number({
 function requiredNumberRange(min: number, max: number) {
   return z.preprocess(
     value => value === "" ? undefined : Number(value),
-    z
-      .number({ message: "Required" })
+    z.number({ message: "Required" })
       .min(min)
       .max(max),
   );
