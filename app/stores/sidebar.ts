@@ -11,6 +11,7 @@ export const useSidebarStore = defineStore("sidebar", () => {
       label: location.name,
       icon: "tabler:map-pin-filled",
       href: "#",
+      location,
     }));
   });
 

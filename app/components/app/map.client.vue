@@ -9,6 +9,7 @@ const colorMode = useColorMode();
 const style = computed(() => colorMode.value === "dark" ? "/styles/dark.json" : "https://tiles.openfreemap.org/styles/liberty");
 
 const zoom = 4;
+const shouldFlyTo = ref(true);
 
 function fitMapToPoints(points: MapPoint[]) {
   const map = mapRef.map;
@@ -29,6 +30,11 @@ function fitMapToPoints(points: MapPoint[]) {
   });
 }
 
+function selectPointWithoutFlyTo(point: MapPoint) {
+  shouldFlyTo.value = false;
+  mapStore.selectedPoint = point;
+}
+
 watch(
   () => mapStore.mapPoints,
   (points) => {
@@ -47,10 +53,26 @@ watch(
     }
   },
 );
+watch(() => mapStore.selectedPoint, (selectedPoint) => {
+  if (!shouldFlyTo.value) {
+    shouldFlyTo.value = true;
+    return;
+  }
+
+  if (!selectedPoint) {
+    fitMapToPoints(mapStore.mapPoints);
+    return;
+  }
+
+  mapRef.map?.flyTo({
+    center: [selectedPoint.long, selectedPoint.lat],
+    speed: 0.8,
+  });
+});
 </script>
 
 <template>
-  <div class="h-full min-h-80 w-full">
+  <div class="h-full min-h-80 w-ful">
     <MglMap
       :map-style="style"
       :center="CENTER_UK"
@@ -65,14 +87,30 @@ watch(
         :coordinates="[point.long, point.lat]"
       >
         <template #marker>
-          <div class="tooltip tooltip-top" :data-tip="point.label">
+          <div
+            class="tooltip tooltip-top hover:cursor-pointer"
+            :class="{
+              'tooltip-open': mapStore.selectedPoint?.id === point.id,
+            }"
+            :data-tip="point.name"
+            @mouseenter="selectPointWithoutFlyTo(point)"
+            @mouseleave="mapStore.selectedPoint = null"
+          >
             <Icon
               name="tabler:map-pin-filled"
               size="30"
-              class="text-secondary"
+              :class="mapStore.selectedPoint?.id === point.id ? 'text-accent' : 'text-secondary' "
             />
           </div>
         </template>
+        <mgl-popup>
+          <h3 class="text-xl">
+            {{ point.name }}
+          </h3>
+          <p>
+            {{ point.description }}
+          </p>
+        </mgl-popup>
       </MglMarker>
     </MglMap>
   </div>
