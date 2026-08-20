@@ -37,7 +37,7 @@ const onSubmit = handleSubmit(async (values) => {
     if (error.data?.data) {
       setErrors(error.data?.data);
     }
-    submitError.value = error.data?.statusMessage || error.statusMessage || "An unknown error occurred";
+    submitError.value = getFetchErrorMessage(error);
   }
   loading.value = false;
 });
@@ -47,6 +47,18 @@ function formatNumber(value?: number) {
     return 0;
 
   return value.toFixed(5);
+}
+
+function searchResultSelected(result: NominatimResult) {
+  setFieldValue("name", result.display_name);
+  mapStore.addedPoint = {
+    id: 1,
+    name: "Added Point",
+    description: "",
+    long: Number(result.lon),
+    lat: Number(result.lat),
+    centerMap: true,
+  };
 }
 
 watch(
@@ -125,17 +137,23 @@ onBeforeRouteLeave(() => {
         :disabled="loading"
         :error="errors.description"
       />
-      <p>
-        Drag the <Icon name="tabler:map-pin-filled" class="text-warning" /> marker to your desired location.
+      <p class="text-xs text-gray-400">
+        Current coordinates: {{ formatNumber(mapStore.addedPoint?.lat) }}, {{ formatNumber(mapStore.addedPoint?.long) }}
       </p>
       <p>
-        Or double click on the map
+        To set the coordinates:
       </p>
-      <p class="text-xs text-gray-600">
-        Current location:
-        {{ formatNumber(mapStore.addedPoint?.lat) }},
-        {{ formatNumber(mapStore.addedPoint?.long) }}
-      </p>
+      <ul class="list-disc ml-4 text-sm">
+        <li>
+          Drag the <Icon name="tabler:map-pin-filled" class="text-warning" /> marker on the map.
+        </li>
+        <li>
+          Double click the map.
+        </li>
+        <li>
+          Search for a location below.
+        </li>
+      </ul>
       <div class="flex justify-end gap-2">
         <button
           :disabled="loading"
@@ -157,5 +175,7 @@ onBeforeRouteLeave(() => {
         </button>
       </div>
     </form>
+    <div class="divider" />
+    <AppPlaceSearch @result-selected="searchResultSelected" />
   </div>
 </template>
