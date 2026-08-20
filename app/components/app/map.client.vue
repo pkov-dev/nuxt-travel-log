@@ -66,7 +66,7 @@ watch(
 );
 
 watch(() => mapStore.addedPoint, (newValue, oldValue) => {
-  if (newValue && !oldValue) {
+  if ((newValue && !oldValue) || newValue?.centerMap) {
     mapRef.map?.flyTo({
       center: [newValue.long, newValue.lat],
       speed: 0.8,
