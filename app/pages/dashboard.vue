@@ -71,7 +71,7 @@ onMounted(() => {
             :show-label="isSidebarOpen"
             :label="item.label"
             :icon="item.icon"
-            :href="item.href"
+            :to="item.to"
             :icon-color="mapStore.selectedPoint?.id === item.location.id ? 'text-accent' : undefined"
             @mouseenter="mapStore.selectedPoint = item.location ?? null"
             @mouseleave="mapStore.selectedPoint = null"

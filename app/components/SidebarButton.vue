@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import type { RouteLocationRaw } from "vue-router";
+
 defineProps<{
   label: string;
   icon: string;
-  href: string;
   showLabel: boolean;
+  href?: string;
+  to?: RouteLocationRaw;
   iconColor?: "text-accent" | "text-primary" | "text-secondary";
 }>();
 
@@ -19,7 +22,7 @@ const route = useRoute();
     }"
   >
     <NuxtLink
-      :to="href"
+      :to="href || to"
       :class="{
         'bg-base-200': route.path === href,
       }"
