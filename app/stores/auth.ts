@@ -7,7 +7,11 @@ export const useAuthStore = defineStore("useAuthStore", () => {
 
   async function init() {
     const data = await authClient.useSession((url, options) => {
-      return useFetch(url, {
+      const relativeUrl = url.startsWith("http")
+        ? new URL(url).pathname
+        : url;
+
+      return useFetch(relativeUrl, {
         ...options,
         key: "better-auth-session",
       });
