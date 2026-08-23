@@ -72,8 +72,8 @@ onMounted(() => {
             :label="item.label"
             :icon="item.icon"
             :to="item.to"
-            :icon-color="mapStore.selectedPoint?.id === item.location.id ? 'text-accent' : undefined"
-            @mouseenter="mapStore.selectedPoint = item.location ?? null"
+            :icon-color="isPointSelected(item.mapPoint, mapStore.selectedPoint) ? 'text-accent' : undefined"
+            @mouseenter="mapStore.selectedPoint = item.mapPoint ?? null"
             @mouseleave="mapStore.selectedPoint = null"
           />
         </template>

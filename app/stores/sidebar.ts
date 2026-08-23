@@ -1,4 +1,3 @@
-import type { SelectLocation } from "~~/lib/db/schema";
 import type { RouteLocationRaw } from "vue-router";
 
 type SidebarItem = {
@@ -6,7 +5,7 @@ type SidebarItem = {
   label: string;
   icon: string;
   to: RouteLocationRaw;
-  location: SelectLocation;
+  mapPoint: MapPoint;
 };
 
 export const useSidebarStore = defineStore("sidebar", () => {
@@ -22,11 +21,7 @@ export const useSidebarStore = defineStore("sidebar", () => {
       label: location.name,
       icon: "tabler:map-pin-filled",
       to: { name: "dashboard-location-slug", params: { slug: location.slug } },
-      location: {
-        ...location,
-        to: { name: "dashboard-location-slug", params: { slug: location.slug } },
-        toLabel: "View",
-      },
+      mapPoint: createMapPointFromLocation(location),
     }));
   });
 
