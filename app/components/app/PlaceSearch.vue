@@ -72,7 +72,14 @@ function setLocation(result: NominatimResult) {
               }"
             />
           </label>
-          <div v-if="errors.q" class="validator-hint text-error">
+          <div
+            v-if="errors.q"
+            class="text-error text-shadow-olive-400 text-sm px-1"
+            :class="{
+              'validator': errors.q,
+              'validator-hint': !errors.q,
+            }"
+          >
             {{ errors.q }}
           </div>
         </div>
