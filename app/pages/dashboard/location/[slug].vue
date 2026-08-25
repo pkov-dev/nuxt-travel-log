@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-const route = useRoute("dashboard-location-slug");
 const mapStore = useMapStore();
 
-const { slug } = route.params;
-
-const { data: location, status, error } = await useLazyFetch(`/api/locations/${slug}`);
+const {
+  data: location,
+  status,
+  error,
+} = useCurrentLocation();
 
 watch(location, (newLocation) => {
   if (newLocation) {
@@ -13,6 +14,7 @@ watch(location, (newLocation) => {
 }, {
   immediate: true,
 });
+
 onBeforeUnmount(() => {
   mapStore.detailedPoint = null;
 });
@@ -44,6 +46,9 @@ onBeforeUnmount(() => {
       <h2 class="text-lg ">
         {{ error.statusText }}
       </h2>
+    </div>
+    <div>
+      <NuxtPage />
     </div>
   </div>
 </template>
