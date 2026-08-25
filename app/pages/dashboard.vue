@@ -48,16 +48,13 @@ onMounted(() => {
       </div>
       <div class="flex flex-col">
         <SidebarButton
+          v-for="item in sidebarStore.sidebarTopItems"
+          :key="item.id"
           :show-label="isSidebarOpen"
-          label="Locations"
-          icon="tabler:map"
-          href="/dashboard"
-        />
-        <SidebarButton
-          :show-label="isSidebarOpen"
-          label="Add Location"
-          icon="tabler:circle-plus-filled"
-          href="/dashboard/add"
+          :label="item.label"
+          :icon="item.icon"
+          :href="item.href"
+          :to="item.to"
         />
         <div v-if="sidebarStore.loading || sidebarStore.sidebarItems.length" class="divider" />
 

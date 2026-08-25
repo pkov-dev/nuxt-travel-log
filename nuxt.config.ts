@@ -35,6 +35,6 @@ export default defineNuxtConfig({
     dataValue: "theme",
   },
   experimental: {
-    typedPages: true,
+    // typedPages: true,
   },
 });
