@@ -35,5 +35,6 @@ export const useSidebarStore = defineStore("sidebar", () => {
   return {
     loading,
     sidebarItems,
+    sidebarTopItems,
   };
 });
