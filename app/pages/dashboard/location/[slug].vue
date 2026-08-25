@@ -5,8 +5,8 @@ const {
   data: location,
   status,
   error,
-} = useCurrentLocation();
-
+} = useCurrentLocation(
+);
 watch(location, (newLocation) => {
   if (newLocation) {
     mapStore.detailedPoint = newLocation;

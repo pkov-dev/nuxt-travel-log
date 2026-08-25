@@ -5,6 +5,74 @@ const locationsStore = useLocationsStore();
 const sidebarStore = useSidebarStore();
 const mapStore = useMapStore();
 
+const { data: currentLocation } = useCurrentLocation(
+);
+
+const sidebarTopItems = computed(() => {
+  if (route.name === "dashboard") {
+    return [
+      {
+        id: "link-dashboard",
+        label: "Locations",
+        href: "/dashboard",
+        icon: "tabler:map",
+      },
+      {
+        id: "link-location-add",
+        label: "Add Location",
+        href: "/dashboard/add",
+        icon: "tabler:circle-plus-filled",
+      },
+    ];
+  }
+
+  if (route.name === "dashboard-location-slug") {
+    return [
+      {
+        id: "link-dashboard",
+        label: "Back to Locations",
+        href: "/dashboard",
+        icon: "tabler:arrow-left",
+      },
+      {
+        id: "link-current-edit",
+        label: "Edit Location",
+        to: {
+          name: "dashboard-location-slug-edit",
+          params: {
+            slug: route.params.slug,
+          },
+        },
+        icon: "tabler:map-pin-cog",
+      },
+      {
+        id: "link-current-location",
+        label: currentLocation.value?.name ?? "View Logs",
+        to: {
+          name: "dashboard-location-slug",
+          params: {
+            slug: route.params.slug,
+          },
+        },
+        icon: "tabler:map",
+      },
+      {
+        id: "link-location-add",
+        label: "Add Location Log",
+        to: {
+          name: "dashboard-location-slug-add",
+          params: {
+            slug: currentLocation.value?.slug,
+          },
+        },
+        icon: "tabler:circle-plus-filled",
+      },
+    ];
+  }
+
+  return [];
+});
+
 function toggleSidebar() {
   isSidebarOpen.value = !isSidebarOpen.value;
   localStorage.setItem("isSidebarOpen", isSidebarOpen.value.toString());
@@ -48,7 +116,7 @@ onMounted(() => {
       </div>
       <div class="flex flex-col">
         <SidebarButton
-          v-for="item in sidebarStore.sidebarTopItems"
+          v-for="item in sidebarTopItems"
           :key="item.id"
           :show-label="isSidebarOpen"
           :label="item.label"
