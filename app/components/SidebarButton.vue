@@ -39,7 +39,7 @@ const route = useRoute();
       <Transition name="label">
         <span
           v-if="showLabel"
-          class="whitespace-nowrap"
+          class="whitespace-nowrap truncate"
         >
           {{ label }}
         </span>
