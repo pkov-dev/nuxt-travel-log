@@ -1,10 +1,12 @@
 <script lang="ts" setup>
+const route = useRoute();
 const mapStore = useMapStore();
 
 const {
   data: location,
   status,
   error,
+  refresh,
 } = useCurrentLocation(
 );
 watch(location, (newLocation) => {
@@ -18,6 +20,12 @@ watch(location, (newLocation) => {
 onBeforeUnmount(() => {
   mapStore.detailedPoint = null;
 });
+
+onBeforeRouteUpdate((to) => {
+  if (to.name === "dashboard-location-slug") {
+    refresh();
+  }
+});
 </script>
 
 <template>
@@ -25,7 +33,13 @@ onBeforeUnmount(() => {
     <div v-if="status === 'pending'">
       <div class="loading" />
     </div>
-    <div v-if="location && status !== 'pending'">
+
+    <div v-if="error && status !== 'pending'" class="alert alert-error">
+      <h2 class="text-lg ">
+        {{ error.statusText }}
+      </h2>
+    </div>
+    <div v-if="route.name === 'dashboard-location-slug' && location && status !== 'pending'">
       <h2 class="text-xl">
         {{ location.name }}
       </h2>
@@ -42,12 +56,7 @@ onBeforeUnmount(() => {
         </button>
       </div>
     </div>
-    <div v-if="error && status !== 'pending'" class="alert alert-error">
-      <h2 class="text-lg ">
-        {{ error.statusText }}
-      </h2>
-    </div>
-    <div>
+    <div v-if="route.name !== 'dashboard-location-slug'">
       <NuxtPage />
     </div>
   </div>

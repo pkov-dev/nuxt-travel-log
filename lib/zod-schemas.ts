@@ -7,7 +7,7 @@ export const SearchSchema = z.object({
 export type SearchSchema = z.infer<typeof SearchSchema>;
 
 export const NameSchema = z.string().min(1).max(100);
-export const DescriptionSchema = z.string().max(1000).optional();
+export const DescriptionSchema = z.string().max(1000).nullable().optional();
 export const LatSchema = requiredNumberRange(-90, 90);
 export const LongSchema = requiredNumberRange(-180, 180);
 export const DateSchema = z.number({

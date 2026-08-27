@@ -1,5 +1,7 @@
 import type { RouteLocationRaw } from "vue-router";
 
+import { LOCATION_PAGES } from "~~/lib/constants";
+
 type SidebarItem = {
   id: string;
   label: string;
@@ -9,15 +11,12 @@ type SidebarItem = {
   mapPoint?: MapPoint;
 };
 
-const listLocationsInSidebar = new Set(["dashboard", "dashboard-add"]);
-// const listCurrentLocationInSidebar = new Set(["dashboard-location-slug", "dashboard-location-slug-edit", "dashboard-location-slug-add"]);
-
 export const useSidebarStore = defineStore("sidebar", () => {
   const locationsStore = useLocationsStore();
   const route = useRoute();
 
   const sidebarItems = computed<SidebarItem[]>(() => {
-    if (!locationsStore.locations?.length || !listLocationsInSidebar.has(route.name?.toString() || "")) {
+    if (!locationsStore.locations?.length || !LOCATION_PAGES.has(route.name?.toString() || "")) {
       return [];
     }
 
