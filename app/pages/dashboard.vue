@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import { CURRENT_LOCATION_PAGES, LOCATION_PAGES } from "~~/lib/constants";
+
 const isSidebarOpen = ref(true);
 const route = useRoute();
 const locationsStore = useLocationsStore();
 const sidebarStore = useSidebarStore();
 const mapStore = useMapStore();
 
-const { data: currentLocation } = useCurrentLocation(
-);
+const { data: currentLocation, status: currentLocationStatus } = useCurrentLocation();
 
 const sidebarTopItems = computed(() => {
-  if (route.name === "dashboard") {
+  if (LOCATION_PAGES.has(String(route.name))) {
     return [
       {
         id: "link-dashboard",
@@ -26,7 +27,7 @@ const sidebarTopItems = computed(() => {
     ];
   }
 
-  if (route.name === "dashboard-location-slug") {
+  else if (CURRENT_LOCATION_PAGES.has(String(route.name))) {
     return [
       {
         id: "link-dashboard",
@@ -34,39 +35,41 @@ const sidebarTopItems = computed(() => {
         href: "/dashboard",
         icon: "tabler:arrow-left",
       },
-      {
-        id: "link-current-edit",
-        label: "Edit Location",
-        to: {
-          name: "dashboard-location-slug-edit",
-          params: {
-            slug: route.params.slug,
-          },
-        },
-        icon: "tabler:map-pin-cog",
-      },
-      {
-        id: "link-current-location",
-        label: currentLocation.value?.name ?? "View Logs",
-        to: {
-          name: "dashboard-location-slug",
-          params: {
-            slug: route.params.slug,
-          },
-        },
-        icon: "tabler:map",
-      },
-      {
-        id: "link-location-add",
-        label: "Add Location Log",
-        to: {
-          name: "dashboard-location-slug-add",
-          params: {
-            slug: currentLocation.value?.slug,
-          },
-        },
-        icon: "tabler:circle-plus-filled",
-      },
+      ...(
+        currentLocation.value && currentLocationStatus.value !== "pending"
+          ? [{
+              id: "link-current-edit",
+              label: "Edit Location",
+              to: {
+                name: "dashboard-location-slug-edit",
+                params: {
+                  slug: route.params.slug,
+                },
+              },
+              icon: "tabler:map-pin-cog",
+            }, {
+              id: "link-current-location",
+              label: currentLocation.value?.name,
+              to: {
+                name: "dashboard-location-slug",
+                params: {
+                  slug: route.params.slug,
+                },
+              },
+              icon: "tabler:map",
+            }, {
+              id: "link-location-add",
+              label: "Add Location Log",
+              to: {
+                name: "dashboard-location-slug-add",
+                params: {
+                  slug: route.params.slug,
+                },
+              },
+              icon: "tabler:circle-plus-filled",
+            }]
+          : []
+      ),
     ];
   }
 
@@ -115,6 +118,9 @@ onMounted(() => {
         />
       </div>
       <div class="flex flex-col">
+        <div v-if="route.path.startsWith('/dashboard/location') && currentLocationStatus === 'pending'" class="flex items-center justify-center">
+          <div class="loading" />
+        </div>
         <SidebarButton
           v-for="item in sidebarTopItems"
           :key="item.id"
@@ -155,6 +161,7 @@ onMounted(() => {
       <div
         class="flex flex-col size-full gap-x-4"
       >
+        <!-- <div class="flex size-full" :class="{ 'flex-col': !EDIT_PAGES.has(String(route.name)) }"> -->
         <NuxtPage />
         <AppMap class="flex-1" />
       </div>
