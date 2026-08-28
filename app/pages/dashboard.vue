@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CURRENT_LOCATION_PAGES, LOCATION_PAGES } from "~~/lib/constants";
+import { CURRENT_LOCATION_PAGES, EDIT_PAGES, LOCATION_PAGES } from "~~/lib/constants";
 
 const isSidebarOpen = ref(true);
 const route = useRoute();
@@ -99,11 +99,7 @@ onMounted(() => {
       }"
     >
       <div
-        class="flex hover:cursor-pointer hover:bg-base-200 p-2"
-        :class="{
-          'justify-center': !isSidebarOpen,
-          'justify-end': isSidebarOpen,
-        }"
+        class="flex hover:cursor-pointer hover:bg-base-200 p-2 justify-end"
         @click="toggleSidebar"
       >
         <Icon
@@ -158,10 +154,10 @@ onMounted(() => {
       </div>
     </div>
     <div class="flex-1 overflow-auto bg-base-200">
-      <div
+      <!-- <div
         class="flex flex-col size-full gap-x-4"
-      >
-        <!-- <div class="flex size-full" :class="{ 'flex-col': !EDIT_PAGES.has(String(route.name)) }"> -->
+      > -->
+      <div class="flex size-full" :class="{ 'flex-col': !EDIT_PAGES.has(String(route.name)) }">
         <NuxtPage />
         <AppMap class="flex-1" />
       </div>

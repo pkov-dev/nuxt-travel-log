@@ -11,8 +11,6 @@ const mapRef = useMglMap();
 const colorMode = useColorMode();
 const style = computed(() => colorMode.value === "dark" ? "/styles/dark.json" : "https://tiles.openfreemap.org/styles/liberty");
 
-const zoom = 4;
-
 function fitMapToPoints(points: MapPoint[]) {
   const map = mapRef.map;
 
@@ -28,7 +26,7 @@ function fitMapToPoints(points: MapPoint[]) {
 
   map.fitBounds(bounds, {
     padding: 50,
-    maxZoom: 14,
+    maxZoom: mapStore.addedPoint?.zoom || 11,
   });
 }
 
@@ -70,11 +68,12 @@ watch(() => mapStore.addedPoint, (newValue, oldValue) => {
     mapRef.map?.flyTo({
       center: [newValue.long, newValue.lat],
       speed: 0.8,
-      zoom: 6,
+      zoom: newValue.zoom || 6,
     });
   }
 }, {
   immediate: true,
+  deep: true,
 });
 </script>
 
@@ -83,7 +82,6 @@ watch(() => mapStore.addedPoint, (newValue, oldValue) => {
     <MglMap
       :map-style="style"
       :center="CENTER_UK"
-      :zoom="zoom"
       @map:dblclick="onDoubleClick"
     >
       <MglNavigationControl />

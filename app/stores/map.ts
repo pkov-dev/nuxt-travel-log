@@ -1,7 +1,7 @@
 export const useMapStore = defineStore("map", () => {
   const selectedPoint = ref<MapPoint | null>(null);
   const detailedPoint = ref<MapPoint | null>(null);
-  const addedPoint = ref<MapPoint & { centerMap?: boolean } | null>(null);
+  const addedPoint = ref<MapPoint & { centerMap?: boolean; zoom?: number } | null>(null);
   const locationsStore = useLocationsStore();
 
   const mapPoints = computed<MapPoint[]>(() => {
